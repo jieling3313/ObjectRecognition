@@ -1,0 +1,10 @@
+(cl:defpackage yolo_ros-srv
+  (:use )
+  (:export
+   "TRIGGERSELECTION"
+   "<TRIGGERSELECTION-REQUEST>"
+   "TRIGGERSELECTION-REQUEST"
+   "<TRIGGERSELECTION-RESPONSE>"
+   "TRIGGERSELECTION-RESPONSE"
+  ))
+

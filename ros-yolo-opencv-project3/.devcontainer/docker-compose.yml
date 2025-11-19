@@ -1,0 +1,28 @@
+# docker-compose.yml (Modified for Docker Compose v1.25.0)
+services:
+  ros-dev:
+    build: .
+    container_name: ros-noetic-yolo-dev
+    command: /bin/bash
+    tty: true
+    stdin_open: true
+
+    # 環境變數設定
+    environment:
+      - DISPLAY=${DISPLAY}
+      - QT_X11_NO_MITSHM=1
+
+    # 儲存卷掛載
+    volumes:
+      - ../src:/root/catkin_ws/src
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      # - /lib/udev:/lib/udev
+      - /etc/udev/rules.d:/etc/udev/rules.d
+      # - /dev/bus/usb:/dev/bus/usb
+      - /dev:/dev
+    # 硬體設備
+    group_add:
+      - video
+    # 權限與網路
+    privileged: true
+    network_mode: host 

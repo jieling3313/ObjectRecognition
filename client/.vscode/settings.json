@@ -1,0 +1,14 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/qrobot/yolo/client/devel/lib/python3/dist-packages",
+        "/home/qrobot/kevin/robot_simulation/devel/lib/python3/dist-packages",
+        "/home/qrobot/kevin/gpm_qisda/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/qrobot/yolo/client/devel/lib/python3/dist-packages",
+        "/home/qrobot/kevin/robot_simulation/devel/lib/python3/dist-packages",
+        "/home/qrobot/kevin/gpm_qisda/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ]
+}

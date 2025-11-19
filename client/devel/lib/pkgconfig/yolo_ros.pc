@@ -1,0 +1,8 @@
+prefix=/home/qrobot/yolo/client/devel
+
+Name: yolo_ros
+Description: Description of yolo_ros
+Version: 0.0.0
+Cflags: -I/home/qrobot/yolo/client/devel/include
+Libs: -L${prefix}/lib 
+Requires: roscpp rospy sensor_msgs geometry_msgs cv_bridge message_runtime
