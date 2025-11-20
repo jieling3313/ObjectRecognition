@@ -63,12 +63,26 @@
     # 設定 Python 環境
     RUN pip3 install --no-cache-dir --upgrade pip
     
-    # 安裝 ultralytics
-    RUN pip3 install --no-cache-dir ultralytics
-    
-    # PyTorch 相關套件
-    RUN pip3 install --no-cache-dir \
-        torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    # 安裝 numpy（POT 需要）
+    RUN pip3 install --no-cache-dir numpy
+
+    # 先安裝 PyTorch Nightly 版本（支援最新 GPU 如 RTX 5080 Blackwell 架構）
+    RUN pip3 install --no-cache-dir --pre \
+        torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu124
+
+    # 安裝 ultralytics 的其他依賴（不包含 torch）
+    RUN pip3 install --no-cache-dir --ignore-installed psutil scipy tqdm \
+        opencv-python pillow pyyaml requests matplotlib seaborn pandas
+
+    # 安裝 ultralytics（使用 --no-deps 避免重新安裝 PyTorch）
+    RUN pip3 install --no-cache-dir --no-deps ultralytics
+
+    # 安裝 POT 0.9.0（使用預編譯輪子，避免 Cython 編譯問題）
+    RUN pip3 install --no-cache-dir "pot==0.9.0"
+
+    # 確認 PyTorch Nightly 仍然是最終版本（以防被覆蓋）
+    RUN pip3 install --no-cache-dir --pre --force-reinstall --no-deps \
+        torch torchvision --index-url https://download.pytorch.org/whl/nightly/cu124
     
     # 建立 Catkin 工作空間並編譯 realsense-ros
     WORKDIR /root/catkin_ws/src
