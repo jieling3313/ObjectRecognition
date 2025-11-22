@@ -5,8 +5,10 @@
 set -e
 
 echo "=========================================="
-echo "重建容器以支援 GPU 訓練"
-echo "安裝 PyTorch Nightly 版本"
+echo "重建容器以支援 RTX 5080 GPU 訓練"
+echo "使用 cogrobot/robospection-ros-noetic:torch29cu128"
+echo "基礎映像包含 Python 3.10 + PyTorch CUDA 12.x"
+echo "支援 Blackwell 架構 sm_120"
 echo "=========================================="
 
 # 1. 停止並移除舊容器
@@ -14,10 +16,12 @@ echo "步驟 1/4: 停止並移除舊容器..."
 docker compose down
 echo "  ✓ 舊容器已停止"
 
-# 2. 重建映像（包含 PyTorch Nightly）
+# 2. 重建映像（包含 PyTorch Nightly + CUDA 12.8）
 echo "步驟 2/4: 重建 Docker 映像..."
-echo "  注意：這將安裝 PyTorch Nightly 版本，可能需要 10-15 分鐘"
-docker compose build --no-cache
+echo "  注意：使用 cogrobot/robospection-ros-noetic:torch29cu128 基礎映像"
+echo "  基礎映像已包含 Python 3.10 + PyTorch + CUDA 12.x + RTX 5080 支援"
+echo "  建置時間預計 8-12 分鐘（主要用於編譯 librealsense）"
+docker compose build
 echo "  ✓ 映像重建完成"
 
 # 3. 啟動新容器

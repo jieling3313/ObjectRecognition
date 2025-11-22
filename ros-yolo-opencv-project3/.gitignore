@@ -41,8 +41,8 @@ test_picture/
 *.swo
 *~
 
-# Claude settings (local)
-.claude/settings.local.json
+# Claude settings (exclude all Claude data)
+.claude/
 
 # Training logs
 *.log
