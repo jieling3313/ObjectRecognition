@@ -726,3 +726,237 @@ model.eval()
 5. **NVIDIA CUDA 兼容性:** https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#compute-capabilities
 6. **NTU RGB+D Dataset:** https://rose1.ntu.edu.sg/dataset/actionRecognition/
 7. **Ultralytics YOLOv8:** https://docs.ultralytics.com/
+
+---
+
+## [2025-11-22 17:15] Interaction Log - 文檔重組與 GitHub 專案發布
+
+### User Prompt Summary
+
+使用者要求完成以下任務序列：
+1. 簡化 `ONE_SHOT_ACTION_RECOGNITION.md`，使用條列式搭配日期
+2. 將完整技術內容移至獨立的 `TECHNICAL_GUIDE.md`
+3. 上傳專案至 GitHub，排除 dataset、模型檔案及 Claude 相關資料
+4. 將 `TECHNICAL_GUIDE.md` 複製為 README.md 供 GitHub 展示
+5. 從 Git 追蹤中移除已存在的 `.claude/` 和 `.vscode/` 檔案
+6. 將 README.md 移至專案上層目錄（ObjectRecognition）
+
+### Actions & Modifications
+
+#### 1. 文檔重組
+
+**ONE_SHOT_ACTION_RECOGNITION.md - 簡化版**
+- **修改內容**：從 ~1500 行縮減至 ~240 行（減少 84% 內容）
+- **新結構**：
+  - 專案概述（條列式）
+  - 開發時間軸（按日期分類）
+    - 2025-11-19：初始實作
+    - 2025-11-20：NTU RGB+D 整合與 GPU 配置
+    - 2025-11-22：RTX 5080 GPU 環境建置
+  - 快速開始指令
+  - 核心檔案列表
+  - ROS Topics & Services
+  - 效能指標
+  - 常見問題
+- **新增引用**：頂部加入 `> 詳細技術資訊請參閱 [TECHNICAL_GUIDE.md](./TECHNICAL_GUIDE.md)`
+
+**TECHNICAL_GUIDE.md - 新建檔案**
+- **內容來源**：從 ONE_SHOT_ACTION_RECOGNITION.md 移出的詳細技術內容
+- **包含章節**：
+  1. 環境建置（GPU 和 CPU）
+  2. 模型架構（COCOGraph、GraphConv、TemporalConv、AGCBlock、SkeletonEmbedding、EMDMatcher）
+  3. 骨架動作辨識原理
+  4. 訓練流程（NTU RGB+D）
+  5. 測試流程
+  6. 完整程式碼範例（4 個範例：簡單訓練、完整訓練、One-Shot 辨識、即時辨識）
+  7. 常見問題排解
+- **檔案大小**：~1095 行
+
+#### 2. Git 配置更新
+
+**.gitignore 更新**（上層 ObjectRecognition/）
+```diff
++ # Claude settings (exclude all Claude data)
++ .claude/
++
++ # IDE settings
++ .vscode/
++ .idea/
+```
+
+**.gitignore 更新**（ros-yolo-opencv-project3/）
+```diff
+- # Claude settings (local)
+- .claude/settings.local.json
++ # Claude settings (exclude all Claude data)
++ .claude/
+```
+
+#### 3. 從 Git 追蹤移除檔案
+
+**移除的檔案**：
+- `.claude/settings.local.json` - Claude Code 本地設定
+- `client/.vscode/c_cpp_properties.json` - VS Code C++ 設定
+- `client/.vscode/settings.json` - VS Code 工作區設定
+
+**執行指令**：
+```bash
+git rm --cached .claude/settings.local.json client/.vscode/c_cpp_properties.json client/.vscode/settings.json
+```
+
+#### 4. README.md 創建與路徑更新
+
+**創建過程**：
+1. 複製 `ros-yolo-opencv-project3/TECHNICAL_GUIDE.md` → `ros-yolo-opencv-project3/README.md`
+2. 複製 `ros-yolo-opencv-project3/README.md` → `ObjectRecognition/README.md`（上層）
+
+**路徑更新**（上層 README.md）：
+```diff
+- cd .devcontainer
++ cd ros-yolo-opencv-project3/.devcontainer
+
+- **檔案**：`.devcontainer/docker-compose.yml`
++ **檔案**：`ros-yolo-opencv-project3/.devcontainer/docker-compose.yml`
+```
+
+#### 5. Git 提交記錄
+
+**Commit 序列**：
+```
+6af5ad7 - docs: Add README.md to root directory with updated paths
+e37c48e - chore: Remove Claude and IDE settings from Git tracking
+f9de34b - chore: Update .gitignore to exclude Claude and IDE settings
+c2d317a - docs: Add RTX 5080 GPU support and reorganize documentation
+```
+
+### Status Update
+
+#### ✅ 已完成
+
+1. **文檔結構優化**
+   - ONE_SHOT_ACTION_RECOGNITION.md 簡化為高層級概覽
+   - TECHNICAL_GUIDE.md 包含完整技術細節
+   - 兩份文檔互相引用，職責清晰
+
+2. **GitHub 專案發布**
+   - 所有重要文件已上傳
+   - Dataset（56,880 .skeleton 檔案）已排除
+   - 模型檔案（*.pt, *.pth）已排除
+   - Claude 相關資料（.claude/）已完全排除
+   - IDE 設定（.vscode/）已完全排除
+
+3. **README.md 配置**
+   - 專案根目錄有完整技術指南
+   - 所有路徑已更新為正確的相對路徑
+   - GitHub 訪客可直接閱讀完整文檔
+
+4. **Git 追蹤清理**
+   - 歷史追蹤中的敏感檔案已移除
+   - .gitignore 正確配置，未來不會誤提交
+
+#### 📂 最終檔案結構
+
+```
+ObjectRecognition/                          ← GitHub 專案根目錄
+├── README.md                               ← 技術指南（TECHNICAL_GUIDE.md 副本，路徑已更新）
+├── .gitignore                              ← 排除 .claude/, .vscode/, node_modules/
+├── ros-yolo-opencv-project3/
+│   ├── README.md                           ← 技術指南（原始版本）
+│   ├── TECHNICAL_GUIDE.md                  ← 技術指南（源文件）
+│   ├── ONE_SHOT_ACTION_RECOGNITION.md      ← 專案概覽（簡化版）
+│   ├── RTX5080_GPU_SETUP_LOG.md            ← GPU 配置記錄
+│   ├── .gitignore                          ← 排除 .claude/, dataset, 模型檔案
+│   ├── .devcontainer/
+│   │   ├── Dockerfile                      ← Python 3.10 + PyTorch 2.9.1+cu128
+│   │   ├── docker-compose.yml              ← GPU runtime 配置
+│   │   └── rebuild_with_gpu.sh             ← 一鍵建置腳本
+│   └── scripts/
+│       ├── skeleton_extractor.py
+│       ├── skeleton_model.py
+│       ├── one_shot_action_node.py
+│       ├── train_ntu_rgbd.py
+│       └── ...
+└── client/
+```
+
+### Next Steps
+
+#### 短期任務
+
+1. **開始 NTU RGB+D 訓練**
+   ```bash
+   cd ros-yolo-opencv-project3/.devcontainer
+   docker compose exec ros-dev bash
+   cd /root/catkin_ws/src/yolo_ros/scripts
+
+   # GPU 完整訓練（50 epochs）
+   python3.10 train_ntu_rgbd.py \
+       --data_path /root/catkin_ws/src/yolo_ros/nturgbd_skeletons_s001_to_s017/nturgb+d_skeletons \
+       --epochs 50 \
+       --batch_size 32 \
+       --device cuda
+   ```
+
+2. **驗證預訓練模型效果**
+   - 訓練完成後檢查 `checkpoints/best.pth`
+   - 測試 One-Shot 辨識準確度
+   - 比較有/無預訓練的效果差異
+
+3. **實機測試**
+   - 使用 RealSense D435i 相機進行即時辨識
+   - 測試不同動作的辨識準確度
+   - 記錄推論速度（GPU vs CPU）
+
+#### 中期改進
+
+1. **模型優化**
+   - 實驗不同的網路架構（層數、通道數）
+   - 調整 EMD 匹配參數
+   - 嘗試不同的時間尺度組合
+
+2. **數據增強**
+   - 加入骨架旋轉、縮放、平移
+   - 時間序列增強（加速、減速）
+   - 增加訓練數據多樣性
+
+3. **部署優化**
+   - 模型量化（FP16/INT8）
+   - ONNX 導出以提升推論速度
+   - TensorRT 優化
+
+#### 文檔維護
+
+1. **持續更新 Interaction Log**
+   - 記錄每次重要修改
+   - 包含問題、解決方案、結果
+   - 方便未來追溯
+
+2. **補充使用範例**
+   - 增加更多實際應用場景
+   - 提供視覺化結果截圖
+   - 製作示範影片
+
+3. **社群貢獻**
+   - 在 GitHub Issues 回答問題
+   - 接受 Pull Requests
+   - 持續改進文檔品質
+
+### Technical Notes
+
+**RTX 5080 GPU 配置成功指標**：
+- ✅ PyTorch 2.9.1+cu128 支援 sm_120
+- ✅ CUDA 12.8 正確安裝
+- ✅ GPU 計算能力確認為 (12, 0)
+- ✅ 訓練速度：~3-4 秒/epoch（batch_size=32）
+
+**文檔組織原則**：
+- **README.md**（根目錄）：完整技術指南，供 GitHub 訪客閱讀
+- **TECHNICAL_GUIDE.md**：技術細節源文件
+- **ONE_SHOT_ACTION_RECOGNITION.md**：高層級專案概覽
+- **RTX5080_GPU_SETUP_LOG.md**：GPU 配置完整歷程記錄
+
+**Git 最佳實踐**：
+- 使用 .gitignore 排除大型檔案和敏感資料
+- 提交訊息遵循 Conventional Commits 格式
+- 定期清理不需要的追蹤檔案
+- 保持提交歷史乾淨且有意義
